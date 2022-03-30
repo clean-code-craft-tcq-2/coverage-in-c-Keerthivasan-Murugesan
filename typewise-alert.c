@@ -1,14 +1,43 @@
 #include "typewise-alert.h"
 #include <stdio.h>
 
+bool checkIfValueIsBelowLimit(double value, double limit) {
+	return (value < limit) ? true : false;
+}
+
+bool checkIfValueIsAboveLimit(double value, double limit) {
+	return (value > limit) ? true : false;
+}
+
+bool checkIfValueIsWithinLimits(double value, double lowerLimit, double upperLimit) {
+	return (value > lowerLimit && value < upperLimit) ? true : false;
+}
+
+void inferLowBreach(double value, double lowerLimit, BreachType *valueBreachType) {
+	bool breachStatus;
+	breachStatus = checkIfValueIsBelowLimit(value, lowerLimit);
+	if (breachStatus) *valueBreachType = TOO_LOW;
+}
+
+void inferHighBreach(double value, double upperLimit, BreachType *valueBreachType) {
+	bool breachStatus;
+	breachStatus = checkIfValueIsAboveLimit(value, upperLimit);
+	if (breachStatus) *valueBreachType = TOO_HIGH;
+}
+
+void inferNoBreach(double value, double lowerLimit, double upperLimit, BreachType *valueBreachType) {
+	bool breachStatus;
+	breachStatus = checkIfValueIsWithinLimits(value, lowerLimit, upperLimit);
+	if (breachStatus) *valueBreachType = NORMAL;
+}
+
 BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
-  if(value < lowerLimit) {
-    return TOO_LOW;
-  }
-  if(value > upperLimit) {
-    return TOO_HIGH;
-  }
-  return NORMAL;
+
+  	BreachType valueBreachType;
+	inferLowBreach(value, lowerLimit, &valueBreachType);
+	inferHighBreach(value, upperLimit, &valueBreachType);
+	inferNoBreach(value, lowerLimit, upperLimit, &valueBreachType);
+	return valueBreachType;
 }
 
 BreachType classifyTemperatureBreach(
@@ -32,12 +61,9 @@ BreachType classifyTemperatureBreach(
   return inferBreach(temperatureInC, lowerLimit, upperLimit);
 }
 
-void checkAndAlert(
-    AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC) {
-
-  BreachType breachType = classifyTemperatureBreach(
-    batteryChar.coolingType, temperatureInC
-  );
+void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC) 
+{
+  BreachType breachType = classifyTemperatureBreach(batteryChar.coolingType, temperatureInC);
 
   switch(alertTarget) {
     case TO_CONTROLLER:
