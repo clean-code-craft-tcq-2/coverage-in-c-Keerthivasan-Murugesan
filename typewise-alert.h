@@ -25,6 +25,12 @@ typedef struct {
   char brand[48];
 } BatteryCharacter;
 
+typedef struct {
+	CoolingType coolingType;
+	int lowerLimit;
+	int upperLimit;
+}CoolingTypeLimitsPair;
+
 void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC);
 
 void sendToController(BreachType breachType);
@@ -35,3 +41,4 @@ bool checkIfValueIsWithinLimits(double value, double lowerLimit, double upperLim
 void inferLowBreach(double value, double lowerLimit, BreachType *valueBreachType);
 void inferHighBreach(double value, double upperLimit, BreachType *valueBreachType);
 void inferNoBreach(double value, double lowerLimit, double upperLimit, BreachType *valueBreachType);
+bool checkIfCoolingTypeMatches(CoolingType coolingType, int index);

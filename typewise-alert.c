@@ -40,24 +40,28 @@ BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
 	return valueBreachType;
 }
 
-BreachType classifyTemperatureBreach(
-    CoolingType coolingType, double temperatureInC) {
+CoolingTypeLimitsPair CoolingTypeLimitsPairs[] = {
+{PASSIVE_COOLING,0,35},
+{HI_ACTIVE_COOLING,0,45},
+{MED_ACTIVE_COOLING,0,40},
+};
+
+bool checkIfCoolingTypeMatches(CoolingType coolingType, int index) {
+	return (coolingType == CoolingTypeLimitsPairs[index].coolingType) ? true : false;
+}
+
+BreachType classifyTemperatureBreach(CoolingType coolingType, double temperatureInC) {
   int lowerLimit = 0;
   int upperLimit = 0;
-  switch(coolingType) {
-    case PASSIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 35;
-      break;
-    case HI_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 45;
-      break;
-    case MED_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 40;
-      break;
-  }
+  int matchfound, numberOfCoolingTypes=3;
+
+	for(int i=0;i<numberOfCoolingTypes;i++){
+		matchfound = checkIfCoolingTypeMatches(coolingType, i);
+		if(matchfound){
+			lowerLimit = CoolingTypeLimitsPairs[i].lowerLimit;
+			upperLimit = CoolingTypeLimitsPairs[i].upperLimit;
+		}
+	}
   return inferBreach(temperatureInC, lowerLimit, upperLimit);
 }
 
