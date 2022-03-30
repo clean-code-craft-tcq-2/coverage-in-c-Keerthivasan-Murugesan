@@ -23,3 +23,12 @@ TEST_CASE("Checks if the values is within given limits") {
 	REQUIRE(checkIfValueIsWithinLimits(25,0,30) == true);
 	REQUIRE(checkIfValueIsWithinLimits(37,0,30) == false);
 }
+
+TEST_CASE("Check the value and alert for Passive Cooling") {
+	BatteryCharacter batteryCharacter;
+	batteryCharacter.coolingType = PASSIVE_COOLING;
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15);
+	checkAndAlert(TO_EMAIL, batteryCharacter, -10);
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 40);
+	REQUIRE(checkIfValueIsWithinLimits(25,0,30) == true);
+}
