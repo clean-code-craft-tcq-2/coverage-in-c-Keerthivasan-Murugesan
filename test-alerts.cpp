@@ -28,7 +28,37 @@ TEST_CASE("Check the value and alert for Passive Cooling") {
 	BatteryCharacter batteryCharacter;
 	batteryCharacter.coolingType = PASSIVE_COOLING;
 	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 15) == NORMAL);
+
 	checkAndAlert(TO_EMAIL, batteryCharacter, -10);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, -10) == TOO_LOW);
+
 	checkAndAlert(TO_CONTROLLER, batteryCharacter, 40);
-	REQUIRE(checkIfValueIsWithinLimits(25,0,30) == true);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 40) == TOO_HIGH);
+}
+
+TEST_CASE("Check the value and alert for High Active Cooling") {
+	BatteryCharacter batteryCharacter;
+	batteryCharacter.coolingType = HI_ACTIVE_COOLING;
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 15) == NORMAL);
+
+	checkAndAlert(TO_EMAIL, batteryCharacter, -10);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, -10) == TOO_LOW);
+
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 50);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 50) == TOO_HIGH);
+}
+
+TEST_CASE("Check the value and alert for Medium Active Cooling") {
+	BatteryCharacter batteryCharacter;
+	batteryCharacter.coolingType = MED_ACTIVE_COOLING;
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 15) == NORMAL);
+
+	checkAndAlert(TO_EMAIL, batteryCharacter, -10);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, -10) == TOO_LOW);
+
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 50);
+	REQUIRE(classifyTemperatureBreach(batteryCharacter, 50) == TOO_HIGH);
 }
