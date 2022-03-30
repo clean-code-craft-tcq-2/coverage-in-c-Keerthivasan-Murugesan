@@ -84,18 +84,34 @@ void sendToController(BreachType breachType) {
   printf("%x : %x\n", header, breachType);
 }
 
+breachTypeAlertStatementPair breachTypeAlertStatementPairs[] = {
+	{TOO_LOW, "Hi, the temperature is too low"},
+	{TOO_HIGH, "Hi, the temperature is too high"},
+	{NORMAL, "h"},
+}; 
+
+bool checkIfBreachTypeMatches(BreachType breachType, int index) {
+	return (breachType == breachTypeAlertStatementPairs[index].breachType) ? true : false;
+}
+
+void print(const char* printStatement) {
+	printf("%s \n", printStatement);
+}
+
+void sendAlertEmail(int matchingIndex, int index, const char* recepient) {
+		// No alert for NORMAL breach type (index=2)
+		if(matchingIndex && (index != 2)){
+     		printf("To: %s\n", recepient);
+			print(breachTypeAlertStatementPairs[index].alertStatement);
+		}
+}
+
 void sendToEmail(BreachType breachType) {
-  const char* recepient = "a.b@c.com";
-  switch(breachType) {
-    case TOO_LOW:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too low\n");
-      break;
-    case TOO_HIGH:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too high\n");
-      break;
-    case NORMAL:
-      break;
+  	const char* recepient = "a.b@c.com";
+	int matchfound, numberOfBreachTypes = 3;
+
+	for(int i=0; i<numberOfBreachTypes; i++){
+		matchfound = checkIfBreachTypeMatches(breachType, i);
+		sendAlertEmail(matchfound, i, recepient);
   }
 }

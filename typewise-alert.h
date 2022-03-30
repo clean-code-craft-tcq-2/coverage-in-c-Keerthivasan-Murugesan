@@ -31,6 +31,11 @@ typedef struct {
 	int upperLimit;
 }CoolingTypeLimitsPair;
 
+typedef struct {
+	BreachType breachType;
+	const char* alertStatement;
+}breachTypeAlertStatementPair;
+
 void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC);
 
 void sendToController(BreachType breachType);
@@ -42,3 +47,6 @@ void inferLowBreach(double value, double lowerLimit, BreachType *valueBreachType
 void inferHighBreach(double value, double upperLimit, BreachType *valueBreachType);
 void inferNoBreach(double value, double lowerLimit, double upperLimit, BreachType *valueBreachType);
 bool checkIfCoolingTypeMatches(CoolingType coolingType, int index);
+void sendAlertEmail(int matchingIndex, int index, void (*fpAlertPrint) (const char*), const char* recepient);
+bool checkIfBreachTypeMatches(BreachType breachType, int index);
+void print(const char* printStatement);
