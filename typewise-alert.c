@@ -84,7 +84,8 @@ void sendToController(BreachType breachType, void (*fpAlertPrint) (const char*))
 	char breachTypeString[10];
 	char header[8] = "feed : ";
 
-	strcat(header, breachType);
+	sprintf(breachTypeString,"%d",breachType);
+	strcat(header, breachTypeString);
   fpAlertPrint(header);
 }
 
