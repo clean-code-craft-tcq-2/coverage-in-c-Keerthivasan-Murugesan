@@ -82,10 +82,9 @@ void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double
 
 void sendToController(BreachType breachType, void (*fpAlertPrint) (const char*)) {
 	char breachTypeString[10];
-	char header[5] = "feed";
+	char header[8] = "feed : ";
 
-	sprintf(breachTypeString,"%d",breachType);
-	strcat(header, breachTypeString);
+	strcat(header, breachType);
   fpAlertPrint(header);
 }
 
