@@ -3,6 +3,13 @@
 #include "test/catch.hpp"
 #include "typewise-alert.h"
 
+int printCallCount = 0;
+
+void fakePrint(const char* printStatement) {
+	printf("%s \n", printStatement);
+	printCallCount++;	
+}
+
 TEST_CASE("Infers the breach type according to limits") {
 	REQUIRE(inferBreach(15, 0, 30) == NORMAL);
 	REQUIRE(inferBreach(35, 20, 30) == TOO_HIGH);
@@ -61,4 +68,23 @@ TEST_CASE("Check the value and alert for Medium Active Cooling") {
 
 	checkAndAlert(TO_EMAIL, batteryCharacter, 50);
 	REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 50) == TOO_HIGH);
+}
+
+TEST_CASE("Send alert to controller") {
+	printCallCount = 0;
+	sendToController(TOO_HIGH, print);
+	sendToController(TOO_HIGH, fakePrint);
+	REQUIRE(printCallCount == 1);
+}
+
+TEST_CASE("Send alert to EMAIL") {
+	printCallCount = 0;
+	sendToEmail(TOO_LOW, fakePrint);
+	REQUIRE(printCallCount == 2);
+}
+
+TEST_CASE("Send Email") {
+	printCallCount = 0;
+	sendAlertEmail(true,1,"a.b@c.com",fakePrint);
+	REQUIRE(printCallCount == 2);
 }

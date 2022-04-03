@@ -79,9 +79,13 @@ void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double
   }
 }
 
-void sendToController(BreachType breachType) {
-  const unsigned short header = 0xfeed;
-  printf("%x : %x\n", header, breachType);
+void sendToController(BreachType breachType, void (*fpAlertPrint) (const char*)) {
+	char breachTypeString[10];
+	char header[5] = "feed";
+
+	sprintf(breachTypeString,"%d",breachType);
+	strcat(header, breachTypeString);
+  fpAlertPrint(header);
 }
 
 breachTypeAlertStatementPair breachTypeAlertStatementPairs[] = {
@@ -98,20 +102,20 @@ void print(const char* printStatement) {
 	printf("%s \n", printStatement);
 }
 
-void sendAlertEmail(int matchingIndex, int index, const char* recepient) {
+void sendAlertEmail(int matchingIndex, int index, const char* recepient, void (*fpAlertPrint) (const char*)) {
 		// No alert for NORMAL breach type (index=2)
 		if(matchingIndex && (index != 2)){
-     		printf("To: %s\n", recepient);
-			print(breachTypeAlertStatementPairs[index].alertStatement);
+			fpAlertPrint(recepient);
+			fpAlertPrint(breachTypeAlertStatementPairs[index].alertStatement);
 		}
 }
 
-void sendToEmail(BreachType breachType) {
+void sendToEmail(BreachType breachType, void (*fpAlertPrint) (const char*)) {
   	const char* recepient = "a.b@c.com";
 	int matchfound, numberOfBreachTypes = 3;
 
 	for(int i=0; i<numberOfBreachTypes; i++){
 		matchfound = checkIfBreachTypeMatches(breachType, i);
-		sendAlertEmail(matchfound, i, recepient);
+		sendAlertEmail(matchfound, i, recepient, fpAlertPrint);
   }
 }
