@@ -36,10 +36,8 @@ typedef struct {
 	const char* alertStatement;
 }breachTypeAlertStatementPair;
 
-void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC);
+void checkAndAlert(AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC, void (*fpAlertMethod) (const char*));
 
-void sendToController(BreachType breachType);
-void sendToEmail(BreachType breachType);
 bool checkIfValueIsBelowLimit(double value, double limit);
 bool checkIfValueIsAboveLimit(double value, double limit);
 bool checkIfValueIsWithinLimits(double value, double lowerLimit, double upperLimit);

@@ -34,7 +34,7 @@ TEST_CASE("Checks if the values is within given limits") {
 TEST_CASE("Check the value and alert for Passive Cooling") {
 	BatteryCharacter batteryCharacter;
 	batteryCharacter.coolingType = PASSIVE_COOLING;
-	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15);
+	checkAndAlert(TO_CONTROLLER, batteryCharacter, 15, print);
 	REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 15) == NORMAL);
 
 	checkAndAlert(TO_EMAIL, batteryCharacter, -10);
